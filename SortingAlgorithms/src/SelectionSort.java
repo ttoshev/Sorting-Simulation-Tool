@@ -1,3 +1,5 @@
+import javafx.application.Platform;
+
 public class SelectionSort implements SortingStratergy {
     
     //When called, runs on separate thread
@@ -9,6 +11,7 @@ public class SelectionSort implements SortingStratergy {
             swap(myArray,index,secondSmallestIndex);
         }
     }
+
     
     public static int getSmallestIndex(int[] myArray, int first, int last){
         int min = myArray[first];

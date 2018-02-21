@@ -17,7 +17,7 @@ public class MergeSort implements SortingStratergy {
     }
   
     public void Merge(int[] myArray, int first, int mid, int last){
-        int[] tempArray = null;
+        int[] tempArray=myArray;
         int startHalfOne=first;
         int endHalfOne=mid;
         int startHalfTwo=mid+1;
@@ -49,6 +49,9 @@ public class MergeSort implements SortingStratergy {
                 startHalfOne++;
                 index++;
             }
+        }
+        for (int i=0; i<tempArray.length;i++){
+            myArray[i]=tempArray[i];
         }
     }
 }
