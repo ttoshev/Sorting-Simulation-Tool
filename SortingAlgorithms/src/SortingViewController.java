@@ -1,6 +1,6 @@
-
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
@@ -32,42 +32,67 @@ public class SortingViewController implements Initializable {
 
     private Model _model;
 
-    /*
-    @FXML
-    private Label label;
-
     @FXML
     private SortingStratergy _sortingMethod;
 
-    @FXML
-    private Model _model;
-
-    private int size = -1;
-
-    public void sort() throws InterruptedException {
-        TaskClass _sortingTask = new TaskClass();
-        Thread thread = new Thread(_sortingTask);
-        thread.start();
-    }
-
-    public void setSortMethod() {
-
-    }
-
-    class TaskClass implements Runnable {
-
-        @Override
-        public void run() {
-            size = (int) arraySizeSlider.getValue();
-            setSortMethod();
-            if (_sortingMethod == null) {
-                label.setText("Please select an algorithm to sort.");
-            } else {
-                _sortingMethod.Sort(_model.getUnsortedList());
+    public  void sort() throws InterruptedException {
+        Thread th = new Thread(){
+            @Override
+            public void run(){
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        if (setSortMethod()){
+                            try {
+                                _sortingMethod.Sort(_model.getUnsortedList());
+                                drawArray();
+                            } catch (InterruptedException ex){}
+                            drawArray();
+                            }
+                    }
+                });
             }
-        }
+        };
+        
+        Thread dr = new Thread(){
+            @Override
+            public void run(){
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        while (th.isAlive())
+                        {drawArray();}
+                        
+                    }
+                });
+            }
+    
+        };
+        
+        th.start();
+        dr.start();
+     
+   
     }
-     */
+    public void reset(){
+        _model.reset(_model.getSize());
+        drawArray();
+    }
+
+    public boolean setSortMethod() {
+        if (algorithmChoiceBox.getValue()=="Merge Sort"){
+            _sortingMethod = new MergeSort();
+            return true;
+        }
+        else if (algorithmChoiceBox.getValue()=="Selection Sort"){
+            _sortingMethod = new SelectionSort();
+            return true;
+        }
+        return false;
+    }
+    
     public void drawArray() {
         
         sortPane.getChildren().clear();

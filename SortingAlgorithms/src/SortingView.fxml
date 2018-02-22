@@ -15,12 +15,12 @@
          </font>
       </Label>
       <ChoiceBox fx:id="algorithmChoiceBox" layoutX="120.0" layoutY="620.0" prefHeight="50.0" prefWidth="175.0" />
-      <Button fx:id="sortButton" layoutX="920.0" layoutY="625.0" mnemonicParsing="false" prefHeight="1.0" prefWidth="70.0" text="Sort">
+      <Button fx:id="sortButton" layoutX="920.0" layoutY="625.0" mnemonicParsing="false" onAction="#sort" prefHeight="1.0" prefWidth="70.0" text="Sort">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="resetButton" layoutX="1000.0" layoutY="625.0" minHeight="1.0" mnemonicParsing="false" prefWidth="70.0" text="Reset">
+      <Button fx:id="resetButton" layoutX="1000.0" layoutY="625.0" minHeight="1.0" mnemonicParsing="false" onAction="#reset" prefWidth="70.0" text="Reset">
          <font>
             <Font size="18.0" />
          </font>
