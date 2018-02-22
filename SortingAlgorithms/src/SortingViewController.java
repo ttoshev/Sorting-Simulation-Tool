@@ -1,3 +1,4 @@
+
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.InvalidationListener;
@@ -10,11 +11,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class SortingViewController implements Initializable {
 
     @FXML
-    private GridPane sortGridPane;
+    private Pane sortPane;
     @FXML
     private ChoiceBox algorithmChoiceBox;
     @FXML
@@ -25,6 +29,10 @@ public class SortingViewController implements Initializable {
     private Button sortButton;
     @FXML
     private Button resetButton;
+
+    private Model _model;
+
+    /*
     @FXML
     private Label label;
 
@@ -34,43 +42,80 @@ public class SortingViewController implements Initializable {
     @FXML
     private Model _model;
 
-    private int size=-1;
+    private int size = -1;
 
-    public void sort() throws InterruptedException{
+    public void sort() throws InterruptedException {
         TaskClass _sortingTask = new TaskClass();
-        Thread thread=new Thread(_sortingTask);
+        Thread thread = new Thread(_sortingTask);
         thread.start();
     }
 
-    public void setSortMethod(){
-        
+    public void setSortMethod() {
+
     }
 
-    class TaskClass implements Runnable{
+    class TaskClass implements Runnable {
+
         @Override
-        public void run(){
-            size=(int) arraySizeSlider.getValue();
+        public void run() {
+            size = (int) arraySizeSlider.getValue();
             setSortMethod();
-            if (_sortingMethod==null){label.setText("Please select an algorithm to sort.");}
-            else {
+            if (_sortingMethod == null) {
+                label.setText("Please select an algorithm to sort.");
+            } else {
                 _sortingMethod.Sort(_model.getUnsortedList());
             }
         }
+    }
+     */
+    public void drawArray() {
+        
+        sortPane.getChildren().clear();
+
+        int arraySize = _model.getSize();
+        int[] array = _model.getUnsortedList();
+
+        double rectangleWidth = sortPane.getPrefWidth() / arraySize;
+
+        for (int i = 0; i < arraySize; i++) {
+
+            double rectangleHeight = (sortPane.getPrefHeight() / arraySize) * array[i];
+            double xValue = rectangleWidth * i;
+            double yValue = sortPane.getPrefHeight() - rectangleHeight;
+
+            Rectangle rectangle = new Rectangle();
+
+            rectangle.setX(xValue);
+            rectangle.setY(yValue);
+            rectangle.setWidth(rectangleWidth);
+            rectangle.setHeight(rectangleHeight);
+            rectangle.setStroke(Color.WHITE);
+            rectangle.setFill(Color.RED);
+            
+            sortPane.getChildren().add(rectangle);
+
+        }
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        _model = new Model(1);
+
         algorithmChoiceBox.setItems(FXCollections.observableArrayList("Merge Sort", "Selection Sort"));
-        arraySizeSlider.valueProperty().addListener(new InvalidationListener(){
+        arraySizeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
 
-                arraySizeLabel.setText(Double.toString(Math.round(arraySizeSlider.getValue())));
+                double arraySize = arraySizeSlider.getValue();
+                int arraySizeIntValue = (int) arraySize;
+
+                arraySizeLabel.setText(Integer.toString(arraySizeIntValue));
+                _model.reset(arraySizeIntValue);
+                drawArray();
 
             }
-
-
 
         });
 
