@@ -1,48 +1,68 @@
-import java.util.concurrent.CountDownLatch;
+
 import javafx.application.Platform;
 
 public class SelectionSort implements SortingStratergy {
-    int[] arr;
-    //When called, runs on separate thread
-    
+
+    private SortingViewController drawController;
+
     @Override
-    public void Sort (int[] myArray)throws InterruptedException{
-        arr=myArray;
-        sortTask _sort = new sortTask();
-        Thread th = new Thread(_sort);
-        th.start();
-        
+    public void setSortingViewController(SortingViewController controller) {
+
+        this.drawController = controller;
+
     }
-    class sortTask implements Runnable{
-        @Override
-        public void run(){
-            for (int index=0;index<arr.length;index++){
-                int secondSmallestIndex=getSmallestIndex(arr,index,arr.length-1);
-                try
-                {
-                    Thread.sleep(5);
-                }catch(InterruptedException ex){}
-                swap(arr,index,secondSmallestIndex);
+
+    @Override
+    public void Sort(int[] myArray) {
+
+        Thread thread2 = new Thread() {
+
+            @Override
+            public void run() {
+
+                for (int index = 0; index < myArray.length; index++) {
+                    int secondSmallestIndex = getSmallestIndex(myArray, index, myArray.length - 1);
+                    swap(myArray, index, secondSmallestIndex);
+                }
             }
-        }
+        };
+        thread2.start();
+
     }
- 
-    public static int getSmallestIndex(int[] myArray, int first, int last){
+
+    public int getSmallestIndex(int[] myArray, int first, int last) {
         int min = myArray[first];
         int minIndex = first;
-        for (int index=first+1;index<=last;index++){
-            if (myArray[index]<min){
+        for (int index = first + 1; index <= last; index++) {
+            if (myArray[index] < min) {
                 min = myArray[index];
-                minIndex=index;
+                minIndex = index;
             }
         }
         return minIndex;
-    }   
-    
-    public static void swap (int[] myArray, int i, int j){
-        int temp=myArray[i];
-        myArray[i]=myArray[j];
-        myArray[j]=temp;
     }
-    
+
+    public void swap(int[] myArray, int i, int j) {
+
+        int temp = myArray[i];
+        myArray[i] = myArray[j];
+        myArray[j] = temp;
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                drawController.drawArray();
+
+            }
+
+        });
+
+        try {
+            System.out.println("About to sleep");
+            Thread.sleep(300);
+        } catch (InterruptedException ex) {
+            System.out.println("exception thrown");
+        };
+    }
+
 }

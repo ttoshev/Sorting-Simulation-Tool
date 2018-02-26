@@ -1,5 +1,8 @@
+
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -35,66 +38,27 @@ public class SortingViewController implements Initializable {
     @FXML
     private SortingStratergy _sortingMethod;
 
-    public  void sort() throws InterruptedException {
-        Thread th = new Thread(){
-            @Override
-            public void run(){
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        if (setSortMethod()){
-                            try {
-                                _sortingMethod.Sort(_model.getUnsortedList());
-                                drawArray();
-                            } catch (InterruptedException ex){}
-                            drawArray();
-                            }
-                    }
-                });
-            }
-        };
-        
-        Thread dr = new Thread(){
-            @Override
-            public void run(){
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        while (th.isAlive())
-                        {drawArray();}
-                        
-                    }
-                });
-            }
-    
-        };
-        
-        th.start();
-        dr.start();
-     
-   
-    }
-    public void reset(){
+    private boolean shouldSleep = false;
+
+    public void reset() {
         _model.reset(_model.getSize());
         drawArray();
     }
 
     public boolean setSortMethod() {
-        if (algorithmChoiceBox.getValue()=="Merge Sort"){
+        if (algorithmChoiceBox.getValue() == "Merge Sort") {
             _sortingMethod = new MergeSort();
             return true;
-        }
-        else if (algorithmChoiceBox.getValue()=="Selection Sort"){
+        } else if (algorithmChoiceBox.getValue() == "Selection Sort") {
             _sortingMethod = new SelectionSort();
+            _sortingMethod.setSortingViewController(this);
             return true;
         }
         return false;
     }
-    
+
     public void drawArray() {
-        
+
         sortPane.getChildren().clear();
 
         int arraySize = _model.getSize();
@@ -116,10 +80,37 @@ public class SortingViewController implements Initializable {
             rectangle.setHeight(rectangleHeight);
             rectangle.setStroke(Color.WHITE);
             rectangle.setFill(Color.RED);
-            
+
             sortPane.getChildren().add(rectangle);
 
         }
+
+    }
+
+    public void sort() throws InterruptedException {
+
+        Thread sortingThread = new Thread() {
+
+            @Override
+            public void run() {
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (setSortMethod()) {
+
+                            _sortingMethod.Sort(_model.getUnsortedList());
+
+                        }
+                    }
+
+                });
+            }
+
+        };
+
+        sortingThread.start();
 
     }
 
