@@ -30,7 +30,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Slider fx:id="arraySizeSlider" layoutX="410.0" layoutY="637.0" max="50.0" min="1.0" prefHeight="10.0" prefWidth="440.0" />
+      <Slider fx:id="arraySizeSlider" layoutX="410.0" layoutY="637.0" max="150.0" min="1.0" prefHeight="10.0" prefWidth="440.0" />
       <Label fx:id="arraySizeLabel" layoutX="865.0" layoutY="630.0">
          <font>
             <Font size="18.0" />

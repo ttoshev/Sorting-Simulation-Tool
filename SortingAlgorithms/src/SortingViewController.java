@@ -1,19 +1,14 @@
-
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -28,26 +23,20 @@ public class SortingViewController implements Initializable {
     private Slider arraySizeSlider;
     @FXML
     private Label arraySizeLabel;
-    @FXML
-    private Button sortButton;
-    @FXML
-    private Button resetButton;
 
-    private Model _model;
 
-    @FXML
     private SortingStratergy _sortingMethod;
-
-    private boolean shouldSleep = false;
+    public Model _model;
 
     public void reset() {
         _model.reset(_model.getSize());
         drawArray();
     }
 
-    public boolean setSortMethod() {
+    public boolean setSortMethod() {//choose between merge and selection sort
         if (algorithmChoiceBox.getValue() == "Merge Sort") {
             _sortingMethod = new MergeSort();
+            _sortingMethod.setSortingViewController(this);
             return true;
         } else if (algorithmChoiceBox.getValue() == "Selection Sort") {
             _sortingMethod = new SelectionSort();
@@ -58,15 +47,13 @@ public class SortingViewController implements Initializable {
     }
 
     public void drawArray() {
-
         sortPane.getChildren().clear();
 
         int arraySize = _model.getSize();
         int[] array = _model.getUnsortedList();
-
         double rectangleWidth = sortPane.getPrefWidth() / arraySize;
 
-        for (int i = 0; i < arraySize; i++) {
+        for (int i = 0; i < arraySize; i++) {//draw new rectangles
 
             double rectangleHeight = (sortPane.getPrefHeight() / arraySize) * array[i];
             double xValue = rectangleWidth * i;
@@ -83,10 +70,10 @@ public class SortingViewController implements Initializable {
 
             sortPane.getChildren().add(rectangle);
 
-        }
+        }//end for
 
     }
-
+    
     public void sort() throws InterruptedException {
 
         Thread sortingThread = new Thread() {
@@ -97,29 +84,23 @@ public class SortingViewController implements Initializable {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-
                         if (setSortMethod()) {
-
                             _sortingMethod.Sort(_model.getUnsortedList());
-
                         }
                     }
-
                 });
-            }
-
-        };
-
+            }//end Run
+        };//end sortingThread
         sortingThread.start();
 
-    }
+    }//end Sort
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         _model = new Model(1);
-
         algorithmChoiceBox.setItems(FXCollections.observableArrayList("Merge Sort", "Selection Sort"));
+        
         arraySizeSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
