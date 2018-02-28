@@ -75,8 +75,24 @@ public class MergeSort implements SortingStratergy {
 	}
 	
 	int remaining = middle - helperLeft;
+        int subtractor = 1;   //Subtractor variable to keep the array index from being called out of bounds.
 	for (int i = 0; i <= remaining; i++) {
+            
+            
+            
+            if (current + i < array.length) {
+            
 		array[current+i] = helper[helperLeft+ i];
+                
+            }
+            
+            else {
+            
+            array[current+i - subtractor] = helper[helperLeft+ i - subtractor];
+            subtractor++;
+            
+            }
+                
 	}
         
         Platform.runLater(new Runnable() {
