@@ -6,12 +6,14 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 
 public class SortingViewController implements Initializable {
 
@@ -23,6 +25,8 @@ public class SortingViewController implements Initializable {
     private Slider arraySizeSlider;
     @FXML
     private Label arraySizeLabel;
+    @FXML
+    private Button btn;
 
 
     private SortingStratergy _sortingMethod;
@@ -46,6 +50,11 @@ public class SortingViewController implements Initializable {
         return false;
     }
 
+    public void exitBtn() {
+        Stage stage = (Stage) algorithmChoiceBox.getScene().getWindow();
+        stage.close();
+    }
+    
     public void drawArray() {
         sortPane.getChildren().clear();
 
